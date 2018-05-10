@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,7 +50,9 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
     String quizListId;
     Integer myQuizCount = 0;
     String userId;
+    String userName;
     Dialog menuDialog;
+    Bundle userBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,9 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_scorecard_channel_listview);
 
         menuDialog = new Dialog(this);
+
+        userBundle = getIntent().getExtras();
+        userName = userBundle.getString("userName","User Name Default");
 
         // ListView to show list of channels available
         myScorecardChannelList = findViewById(R.id.listView_Score_Channel);
@@ -170,6 +176,8 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
                 quizListIntent.putExtra("channelName", channelName);
                 quizListIntent.putExtra("moderatorName", moderatorName);
                 quizListIntent.putExtra("moderatorId", moderatorId);
+                quizListIntent.putExtra("userName", userName);
+
                 startActivity(quizListIntent);
 
             }
@@ -180,7 +188,9 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
         findViewById(R.id.button_Back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MyScorecardChannelActivity.this, HomeActivity.class));
+                Intent backIntent = new Intent(MyScorecardChannelActivity.this, HomeActivity.class);
+                backIntent.putExtra("userName", userName);
+                startActivity(backIntent);
             }
         });
 
@@ -197,6 +207,10 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
 
         menuDialog.setContentView(R.layout.menupopup);
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
+        txtUserName.setText(userName);
+
         menuDialog.show();
     }
 
@@ -229,7 +243,11 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
 
     public void myChannelPressed(View view) {
 
-        startActivity(new Intent(MyScorecardChannelActivity.this, UserChannelActivity.class));
+        Intent myChannelIntent = new Intent(MyScorecardChannelActivity.this, UserChannelActivity.class);
+
+        myChannelIntent.putExtra("userName", userName);
+        startActivity(myChannelIntent);
+
         finish();
     }
 
@@ -239,7 +257,11 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
 
     public void allChannelPressed(View view) {
 
-        startActivity(new Intent(MyScorecardChannelActivity.this, AllChannelListActivity.class));
+        Intent allChannelIntent = new Intent(MyScorecardChannelActivity.this, AllChannelListActivity.class);
+
+        allChannelIntent.putExtra("userName", userName);
+        startActivity(allChannelIntent);
+
         finish();
     }
 
@@ -249,7 +271,11 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
 
     public void myScorecardPressed(View view) {
 
-        startActivity(new Intent(MyScorecardChannelActivity.this, MyScorecardChannelActivity.class));
+        Intent myScorecardIntent = new Intent(MyScorecardChannelActivity.this, MyScorecardChannelActivity.class);
+
+        myScorecardIntent.putExtra("userName", userName);
+        startActivity(myScorecardIntent);
+
         finish();
     }
 
@@ -259,7 +285,11 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
 
     public void leaderboardPressed(View view) {
 
-        startActivity(new Intent(MyScorecardChannelActivity.this, LeaderboardChannelActivity.class));
+        Intent myLeaderboardIntent = new Intent(MyScorecardChannelActivity.this, LeaderboardChannelActivity.class);
+
+        myLeaderboardIntent.putExtra("userName", userName);
+        startActivity(myLeaderboardIntent);
+
         finish();
     }
 
@@ -271,6 +301,12 @@ public class MyScorecardChannelActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void homeButton(View view){
+        Intent homeIntent = new Intent(MyScorecardChannelActivity.this, HomeActivity.class);
+        homeIntent.putExtra("userName", userName);
+        startActivity(homeIntent);
     }
 
 }

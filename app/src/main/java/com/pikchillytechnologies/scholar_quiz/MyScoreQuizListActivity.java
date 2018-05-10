@@ -78,7 +78,7 @@ public class MyScoreQuizListActivity extends AppCompatActivity {
         channelName = channelBundle.getString("channelName","Channel Name Default");
         moderatorName = channelBundle.getString("moderatorName","Moderator Name Default");
         moderatorId = channelBundle.getString("moderatorId", "Moderator ID");
-
+        userName = channelBundle.getString("userName", "User Name");
         // Put the Title as Channel name
         TextView myQuizTitleTextView = findViewById(R.id.textView_MyQuizTitle);
         myQuizTitleTextView.setText(String.valueOf(channelName));
@@ -221,7 +221,10 @@ public class MyScoreQuizListActivity extends AppCompatActivity {
         findViewById(R.id.button_Back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MyScoreQuizListActivity.this, MyScorecardChannelActivity.class));
+
+                Intent backIntent = new Intent(MyScoreQuizListActivity.this, MyScorecardChannelActivity.class);
+                backIntent.putExtra("userName", userName);
+                startActivity(backIntent);
             }
         });
 
@@ -238,6 +241,10 @@ public class MyScoreQuizListActivity extends AppCompatActivity {
 
         menuDialog.setContentView(R.layout.menupopup);
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
+        txtUserName.setText(userName);
+
         menuDialog.show();
     }
 
@@ -270,7 +277,11 @@ public class MyScoreQuizListActivity extends AppCompatActivity {
 
     public void myChannelPressed(View view) {
 
-        startActivity(new Intent(MyScoreQuizListActivity.this, UserChannelActivity.class));
+        Intent myChannelIntent = new Intent(MyScoreQuizListActivity.this, UserChannelActivity.class);
+
+        myChannelIntent.putExtra("userName", userName);
+        startActivity(myChannelIntent);
+
         finish();
     }
 
@@ -280,7 +291,11 @@ public class MyScoreQuizListActivity extends AppCompatActivity {
 
     public void allChannelPressed(View view) {
 
-        startActivity(new Intent(MyScoreQuizListActivity.this, AllChannelListActivity.class));
+        Intent allChannelIntent = new Intent(MyScoreQuizListActivity.this, AllChannelListActivity.class);
+
+        allChannelIntent.putExtra("userName", userName);
+        startActivity(allChannelIntent);
+
         finish();
     }
 
@@ -290,7 +305,11 @@ public class MyScoreQuizListActivity extends AppCompatActivity {
 
     public void myScorecardPressed(View view) {
 
-        startActivity(new Intent(MyScoreQuizListActivity.this, MyScorecardChannelActivity.class));
+        Intent myScorecardIntent = new Intent(MyScoreQuizListActivity.this, MyScorecardChannelActivity.class);
+
+        myScorecardIntent.putExtra("userName", userName);
+        startActivity(myScorecardIntent);
+
         finish();
     }
 
@@ -301,6 +320,11 @@ public class MyScoreQuizListActivity extends AppCompatActivity {
     public void leaderboardPressed(View view) {
 
         startActivity(new Intent(MyScoreQuizListActivity.this, LeaderboardChannelActivity.class));
+        Intent myLeaderboardIntent = new Intent(MyScoreQuizListActivity.this, LeaderboardChannelActivity.class);
+
+        myLeaderboardIntent.putExtra("userName", userName);
+        startActivity(myLeaderboardIntent);
+
         finish();
     }
 
@@ -312,6 +336,12 @@ public class MyScoreQuizListActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void homeButton(View view){
+        Intent homeIntent = new Intent(MyScoreQuizListActivity.this, HomeActivity.class);
+        homeIntent.putExtra("userName", userName);
+        startActivity(homeIntent);
     }
 
 }

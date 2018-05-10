@@ -57,6 +57,7 @@ public class QuizListActivity extends AppCompatActivity {
     private DatabaseReference mSubscriptionListRef;
     private FirebaseUser user;
     String userId;
+    String userName;
 
     Dialog menuDialog;
 
@@ -76,6 +77,7 @@ public class QuizListActivity extends AppCompatActivity {
         channelName = channelBundle.getString("channelName","Channel Name Default");
         moderatorName = channelBundle.getString("moderatorName","Moderator Name Default");
         moderatorId = channelBundle.getString("moderatorId", "Moderator ID");
+        userName = channelBundle.getString("userName", "User Name");
 
         TextView title_TextView = findViewById(R.id.textView_Title);
         title_TextView.setText(String.valueOf(channelName));
@@ -174,6 +176,7 @@ public class QuizListActivity extends AppCompatActivity {
                     quizListToQuizIntent.putExtra("moderatorId", moderatorId);
                     quizListToQuizIntent.putExtra("quizListKey", quizListKey);
                     quizListToQuizIntent.putExtra("quizTitle", quizTitle);
+                    quizListToQuizIntent.putExtra("userName", userName);
 
                     startActivity(quizListToQuizIntent);
                 }
@@ -197,7 +200,7 @@ public class QuizListActivity extends AppCompatActivity {
                 quizListToUserChannelIntent.putExtra("channelName",channelName);
                 quizListToUserChannelIntent.putExtra("moderatorName",moderatorName);
                 quizListToUserChannelIntent.putExtra("moderatorId",moderatorId);
-
+                quizListToUserChannelIntent.putExtra("userName",userName);
 
                 startActivity(quizListToUserChannelIntent);
                 finish();
@@ -213,7 +216,7 @@ public class QuizListActivity extends AppCompatActivity {
                 createQuizIntent.putExtra("channelName",channelName);
                 createQuizIntent.putExtra("moderatorName",moderatorName);
                 createQuizIntent.putExtra("moderatorId",moderatorId);
-
+                createQuizIntent.putExtra("userName",userName);
                 startActivity(createQuizIntent);
             }
         });
@@ -230,6 +233,10 @@ public class QuizListActivity extends AppCompatActivity {
 
         menuDialog.setContentView(R.layout.menupopup);
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
+        txtUserName.setText(userName);
+
         menuDialog.show();
     }
 
@@ -262,7 +269,11 @@ public class QuizListActivity extends AppCompatActivity {
 
     public void myChannelPressed(View view) {
 
-        startActivity(new Intent(QuizListActivity.this, UserChannelActivity.class));
+        Intent myChannelIntent = new Intent(QuizListActivity.this, UserChannelActivity.class);
+
+        myChannelIntent.putExtra("userName", userName);
+        startActivity(myChannelIntent);
+
         finish();
     }
 
@@ -272,7 +283,11 @@ public class QuizListActivity extends AppCompatActivity {
 
     public void allChannelPressed(View view) {
 
-        startActivity(new Intent(QuizListActivity.this, AllChannelListActivity.class));
+        Intent allChannelIntent = new Intent(QuizListActivity.this, AllChannelListActivity.class);
+
+        allChannelIntent.putExtra("userName", userName);
+        startActivity(allChannelIntent);
+
         finish();
     }
 
@@ -282,7 +297,11 @@ public class QuizListActivity extends AppCompatActivity {
 
     public void myScorecardPressed(View view) {
 
-        startActivity(new Intent(QuizListActivity.this, MyScorecardChannelActivity.class));
+        Intent myScorecardIntent = new Intent(QuizListActivity.this, MyScorecardChannelActivity.class);
+
+        myScorecardIntent.putExtra("userName", userName);
+        startActivity(myScorecardIntent);
+
         finish();
     }
 
@@ -292,7 +311,11 @@ public class QuizListActivity extends AppCompatActivity {
 
     public void leaderboardPressed(View view) {
 
-        startActivity(new Intent(QuizListActivity.this, LeaderboardChannelActivity.class));
+        Intent myLeaderboardIntent = new Intent(QuizListActivity.this, LeaderboardChannelActivity.class);
+
+        myLeaderboardIntent.putExtra("userName", userName);
+        startActivity(myLeaderboardIntent);
+
         finish();
     }
     /**
@@ -302,6 +325,12 @@ public class QuizListActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void homeButton(View view){
+        Intent homeIntent = new Intent(QuizListActivity.this, HomeActivity.class);
+        homeIntent.putExtra("userName", userName);
+        startActivity(homeIntent);
     }
 
 }

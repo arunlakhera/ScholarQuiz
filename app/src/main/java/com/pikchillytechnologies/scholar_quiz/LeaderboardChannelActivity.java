@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +51,9 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
     String totalNumberOfQuiz;
     String totalUserQuiz;
 
+    String userName;
+    Bundle userBundle;
+
     Dialog menuDialog;
 
     @Override
@@ -59,6 +63,10 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
 
         menuDialog = new Dialog(this);
 
+        userBundle = getIntent().getExtras();
+
+        userName = userBundle.getString("userName","User Name");
+
         // ListView to show list of channels available
         leaderboardChannelListview = findViewById(R.id.listView_leaderboard_Channel);
         leaderboardChannelList = new ArrayList<>();
@@ -66,7 +74,6 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
         // To get User id of Current user so we can travel to Subscription List of User
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mSubscriptionListRef = mDatabase.child("SQ_Subscription/" + String.valueOf(user.getUid()));
@@ -164,6 +171,7 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
                 quizListIntent.putExtra("channelName", channelName);
                 quizListIntent.putExtra("moderatorName", moderatorName);
                 quizListIntent.putExtra("moderatorId", moderatorId);
+                quizListIntent.putExtra("userName", userName);
                 startActivity(quizListIntent);
 
             }
@@ -172,7 +180,10 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
         findViewById(R.id.button_Back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LeaderboardChannelActivity.this, HomeActivity.class));
+
+                Intent backIntent = new Intent(LeaderboardChannelActivity.this, HomeActivity.class);
+                backIntent.putExtra("userName", userName);
+                startActivity(backIntent);
             }
         });
 
@@ -190,6 +201,10 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
 
         menuDialog.setContentView(R.layout.menupopup);
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
+        txtUserName.setText(userName);
+
         menuDialog.show();
     }
 
@@ -222,7 +237,11 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
 
     public void myChannelPressed(View view) {
 
-        startActivity(new Intent(LeaderboardChannelActivity.this, UserChannelActivity.class));
+        Intent myChannelIntent = new Intent(LeaderboardChannelActivity.this, UserChannelActivity.class);
+
+        myChannelIntent.putExtra("userName", userName);
+        startActivity(myChannelIntent);
+
         finish();
     }
 
@@ -232,7 +251,11 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
 
     public void allChannelPressed(View view) {
 
-        startActivity(new Intent(LeaderboardChannelActivity.this, AllChannelListActivity.class));
+        Intent allChannelIntent = new Intent(LeaderboardChannelActivity.this, AllChannelListActivity.class);
+
+        allChannelIntent.putExtra("userName", userName);
+        startActivity(allChannelIntent);
+
         finish();
     }
 
@@ -242,7 +265,11 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
 
     public void myScorecardPressed(View view) {
 
-        startActivity(new Intent(LeaderboardChannelActivity.this, MyScorecardChannelActivity.class));
+        Intent myScorecardIntent = new Intent(LeaderboardChannelActivity.this, MyScorecardChannelActivity.class);
+
+        myScorecardIntent.putExtra("userName", userName);
+        startActivity(myScorecardIntent);
+
         finish();
     }
 
@@ -252,7 +279,11 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
 
     public void leaderboardPressed(View view) {
 
-        startActivity(new Intent(LeaderboardChannelActivity.this, LeaderboardChannelActivity.class));
+        Intent myLeaderboardIntent = new Intent(LeaderboardChannelActivity.this, LeaderboardChannelActivity.class);
+
+        myLeaderboardIntent.putExtra("userName", userName);
+        startActivity(myLeaderboardIntent);
+
         finish();
     }
 
@@ -267,5 +298,10 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    public void homeButton(View view){
+        Intent homeIntent = new Intent(LeaderboardChannelActivity.this, HomeActivity.class);
+        homeIntent.putExtra("userName", userName);
+        startActivity(homeIntent);
+    }
 
 }

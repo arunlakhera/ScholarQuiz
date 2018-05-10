@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +20,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class HomeActivity extends AppCompatActivity {
 
     Dialog menuDialog;
+    Bundle userBundle;
+    String userId;
+    String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,10 @@ public class HomeActivity extends AppCompatActivity {
 
         menuDialog = new Dialog(this);
 
+        userBundle = getIntent().getExtras();
+
+        userName = userBundle.getString("userName","User Name");
+/*
         // Direct User to channels user has subscribed to
         findViewById(R.id.myChannelButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(HomeActivity.this, LeaderboardChannelActivity.class));
             }
         });
-
+*/
     }
 
     /**
@@ -72,6 +80,10 @@ public class HomeActivity extends AppCompatActivity {
 
         menuDialog.setContentView(R.layout.menupopup);
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
+        txtUserName.setText(userName);
+
         menuDialog.show();
     }
 
@@ -104,7 +116,11 @@ public class HomeActivity extends AppCompatActivity {
 
     public void myChannelPressed(View view) {
 
-        startActivity(new Intent(HomeActivity.this, UserChannelActivity.class));
+        Intent myChannelIntent = new Intent(HomeActivity.this, UserChannelActivity.class);
+
+        myChannelIntent.putExtra("userName", userName);
+        startActivity(myChannelIntent);
+
         finish();
     }
 
@@ -114,7 +130,11 @@ public class HomeActivity extends AppCompatActivity {
 
     public void allChannelPressed(View view) {
 
-        startActivity(new Intent(HomeActivity.this, AllChannelListActivity.class));
+        Intent allChannelIntent = new Intent(HomeActivity.this, AllChannelListActivity.class);
+
+        allChannelIntent.putExtra("userName", userName);
+        startActivity(allChannelIntent);
+
         finish();
     }
 
@@ -124,7 +144,11 @@ public class HomeActivity extends AppCompatActivity {
 
     public void myScorecardPressed(View view) {
 
-        startActivity(new Intent(HomeActivity.this, MyScorecardChannelActivity.class));
+        Intent myScorecardIntent = new Intent(HomeActivity.this, MyScorecardChannelActivity.class);
+
+        myScorecardIntent.putExtra("userName", userName);
+        startActivity(myScorecardIntent);
+
         finish();
     }
 
@@ -134,7 +158,11 @@ public class HomeActivity extends AppCompatActivity {
 
     public void leaderboardPressed(View view) {
 
-        startActivity(new Intent(HomeActivity.this, LeaderboardChannelActivity.class));
+        Intent myLeaderboardIntent = new Intent(HomeActivity.this, LeaderboardChannelActivity.class);
+
+        myLeaderboardIntent.putExtra("userName", userName);
+        startActivity(myLeaderboardIntent);
+
         finish();
     }
 
@@ -147,7 +175,6 @@ public class HomeActivity extends AppCompatActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
 
 
 }

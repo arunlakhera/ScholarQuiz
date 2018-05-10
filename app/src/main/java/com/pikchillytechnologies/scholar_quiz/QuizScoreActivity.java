@@ -148,6 +148,8 @@ public class QuizScoreActivity extends AppCompatActivity {
         moreQuizIntent.putExtra("channelId",channelId);
         moreQuizIntent.putExtra("channelName",channelName);
         moreQuizIntent.putExtra("moderatorName",moderatorName);
+        moreQuizIntent.putExtra("userName",userName);
+
         startActivity(moreQuizIntent);
     }
 
@@ -163,6 +165,10 @@ public class QuizScoreActivity extends AppCompatActivity {
 
         menuDialog.setContentView(R.layout.menupopup);
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
+        txtUserName.setText(userName);
+
         menuDialog.show();
     }
 
@@ -195,7 +201,11 @@ public class QuizScoreActivity extends AppCompatActivity {
 
     public void myChannelPressed(View view) {
 
-        startActivity(new Intent(QuizScoreActivity.this, UserChannelActivity.class));
+        Intent myChannelIntent = new Intent(QuizScoreActivity.this, UserChannelActivity.class);
+
+        myChannelIntent.putExtra("userName", userName);
+        startActivity(myChannelIntent);
+
         finish();
     }
 
@@ -205,7 +215,11 @@ public class QuizScoreActivity extends AppCompatActivity {
 
     public void allChannelPressed(View view) {
 
-        startActivity(new Intent(QuizScoreActivity.this, AllChannelListActivity.class));
+        Intent allChannelIntent = new Intent(QuizScoreActivity.this, AllChannelListActivity.class);
+
+        allChannelIntent.putExtra("userName", userName);
+        startActivity(allChannelIntent);
+
         finish();
     }
 
@@ -215,9 +229,12 @@ public class QuizScoreActivity extends AppCompatActivity {
 
     public void myScorecardPressed(View view) {
 
-        startActivity(new Intent(QuizScoreActivity.this, MyScorecardChannelActivity.class));
-        finish();
-    }
+        Intent myScorecardIntent = new Intent(QuizScoreActivity.this, MyScorecardChannelActivity.class);
+
+        myScorecardIntent.putExtra("userName", userName);
+        startActivity(myScorecardIntent);
+
+        finish();    }
 
     /**
      * 7. Function to execute when user presses Leaderboard
@@ -225,7 +242,11 @@ public class QuizScoreActivity extends AppCompatActivity {
 
     public void leaderboardPressed(View view) {
 
-        startActivity(new Intent(QuizScoreActivity.this, LeaderboardChannelActivity.class));
+        Intent myLeaderboardIntent = new Intent(QuizScoreActivity.this, LeaderboardChannelActivity.class);
+
+        myLeaderboardIntent.putExtra("userName", userName);
+        startActivity(myLeaderboardIntent);
+
         finish();
     }
 
@@ -239,6 +260,10 @@ public class QuizScoreActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-
+    public void homeButton(View view){
+        Intent homeIntent = new Intent(QuizScoreActivity.this, HomeActivity.class);
+        homeIntent.putExtra("userName", userName);
+        startActivity(homeIntent);
+    }
 
 }

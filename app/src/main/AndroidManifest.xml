@@ -31,8 +31,12 @@
         <activity android:name=".MyScorecardActivity" />
         <activity android:name=".LeaderboardQuizListActivity" />
         <activity android:name=".LeaderboardChannelActivity" />
-        <activity android:name=".LeaderScoreboardActivity"/>
-        
+        <activity android:name=".LeaderScoreboardActivity" />
+        <activity android:name=".AdminHomeActivity" />
+        <activity android:name=".AdminModeratorActivity" />
+        <activity android:name=".AdminCreateChannelActivity" />
+        <activity android:name=".AdminChannelListActivity" />
+        <activity android:name=".AdminUserListActivity"></activity>
     </application>
 
 </manifest>

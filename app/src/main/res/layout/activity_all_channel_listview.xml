@@ -25,6 +25,22 @@
         android:src="@drawable/title_bg_yellow"
         android:textAlignment="center" />
 
+
+
+    <Button
+        android:id="@+id/button_Menu"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/menubutton_yellow"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:onClick="showPopUp"
+        />
+
     <TextView
         android:id="@+id/title_TextView"
         android:layout_width="wrap_content"
@@ -48,21 +64,9 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/design_button_yellow"
-        android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/button_Menu"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@drawable/menubutton_yellow"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:onClick="showPopUp"
+        android:background="@drawable/home_brown"
+        android:textStyle="bold"
+        android:onClick="homeButton"
         />
 
     <ListView
@@ -74,41 +78,6 @@
         android:footerDividersEnabled="false"
 
         />
-
-    <!-- to add channel
-        <EditText
-            android:id="@+id/editText_Channel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="ENTER CHANNEL NAME"
-            android:layout_above="@id/editText_Moderator"
-            android:background="#000000"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            />
-        <EditText
-            android:id="@+id/editText_Moderator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="ENTER CHANNEL NAME"
-            android:layout_above="@id/button_AddChannel"
-            android:background="#212121"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            />
-
-
-        <Button
-            android:id="@+id/button_AddChannel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ADD CHANNEL"
-            android:layout_alignParentBottom="true"
-            android:background="#E91E63"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp"
-            />
-    -->
 
     <Button
         android:id="@+id/button_Back"

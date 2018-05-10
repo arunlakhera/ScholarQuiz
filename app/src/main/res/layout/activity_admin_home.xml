@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".AdminHomeActivity">
 
     <ImageView
         android:id="@+id/bg_ImageView"
@@ -33,8 +33,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
-        android:onClick="showPopUp"
-        android:background="@drawable/menubutton_yellow" />
+        android:background="@drawable/design_button_yellow" />
 
     <TextView
         android:id="@+id/textView_Title"
@@ -43,13 +42,14 @@
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
-        android:text="Home"
+        android:text="Admin Home"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="25dp"
         android:textStyle="bold" />
 
     <Button
+        android:id="@+id/button_logout"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
@@ -58,9 +58,11 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/design_button_yellow"
+        android:background="@drawable/logout_yellow"
         android:textColor="#E91E63"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:onClick="logout"
+        />
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -69,63 +71,55 @@
         android:fillViewport="true">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/title_ImageView"
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardview_MyChannel"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:elevation="5dp"
-                card_view:cardBackgroundColor="#FFECB3"
-                card_view:cardCornerRadius="4dp">
+                card_view:cardBackgroundColor="#FFECB3">
 
                 <Button
                     android:id="@+id/myChannelButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/mychannel_bg"
-                    android:text="My Channels"
+                    android:text="Create Channel"
                     android:textAlignment="center"
                     android:fontFamily="serif"
                     android:textColor="#FFFFFF"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    android:onClick="myChannelPressed"
+                    android:onClick="manageChannel"
                     />
 
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardview_AllChannel"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:elevation="5dp"
-                card_view:cardBackgroundColor="#FFECB3"
-                card_view:cardCornerRadius="4dp">
+                card_view:cardBackgroundColor="#FFECB3">
 
                 <Button
                     android:id="@+id/allChannelButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/allchannel_bg"
-                    android:text="All Channels"
+                    android:text="Assign Moderator"
                     android:textAlignment="center"
                     android:fontFamily="serif"
                     android:textColor="#FFFFFF"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    android:onClick="allChannelPressed"
+                    android:onClick="manageModerator"
                     />
 
             </android.support.v7.widget.CardView>
@@ -135,25 +129,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
                 android:layout_weight="1"
-                android:elevation="5dp"
                 card_view:cardBackgroundColor="#FFECB3"
-                card_view:cardCornerRadius="4dp">
+                >
 
                 <Button
                     android:id="@+id/myScorecardButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/myscorecard_bg"
-                    android:text="My Scorecard"
+                    android:text="Quiz Report"
                     android:textAlignment="center"
                     android:fontFamily="serif"
                     android:textColor="#FFFFFF"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    android:onClick="myScorecardPressed"
+                    android:visibility="invisible"
                     />
 
             </android.support.v7.widget.CardView>
@@ -163,25 +154,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
                 android:layout_weight="1"
                 android:elevation="5dp"
                 card_view:cardBackgroundColor="#FFECB3"
-                card_view:cardCornerRadius="4dp">
+                >
 
                 <Button
                     android:id="@+id/leaderboardButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/leaderboard_bg"
-                    android:text="Leaderboard"
+                    android:text="User Report"
                     android:textAlignment="center"
                     android:fontFamily="serif"
                     android:textColor="#FFFFFF"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    android:onClick="leaderboardPressed"
+                    android:visibility="invisible"
                     />
 
             </android.support.v7.widget.CardView>

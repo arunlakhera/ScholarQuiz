@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +30,7 @@ public class AllChannelListActivity extends AppCompatActivity {
     ListView channelList;
 
     //Databas Reference
+
     private DatabaseReference mChannelRef;
     private DatabaseReference mChannelListRef;
     private DatabaseReference mSubscriptionListRef;
@@ -36,11 +38,15 @@ public class AllChannelListActivity extends AppCompatActivity {
     DatabaseReference mDatabase;
 
     CustomAllChannelAdapter customAdapter;
-    List<ChannelList> AllChannelList;
+    List<ChannelList> allChannelList;
     ChannelList channel = new ChannelList();
 
     String channelExist = "N";
     String channelId;
+
+    Bundle userBundle;
+    String userId;
+    String userName;
 
     Dialog menuDialog;
 
@@ -51,9 +57,13 @@ public class AllChannelListActivity extends AppCompatActivity {
 
         menuDialog = new Dialog(this);
 
+        userBundle = getIntent().getExtras();
+
+        userName = userBundle.getString("userName","User Name");
+
         // ListView to show list of channels available
         channelList = findViewById(R.id.listView_Channel);
-        AllChannelList = new ArrayList<>();
+        allChannelList = new ArrayList<>();
 
         // To get User id of Current user so we can travel to Subscription List of User
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -79,7 +89,7 @@ public class AllChannelListActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot channelSnapshot) {
 
                 // Clear the Channel List View
-                AllChannelList.clear();
+                allChannelList.clear();
 
                 // Check the count of Channels to subscribe to. If no channel, show message else show list of channels
                 if (channelSnapshot.getChildrenCount() < 1) {
@@ -111,8 +121,8 @@ public class AllChannelListActivity extends AppCompatActivity {
 
                                     // Show channels available to user
                                     channel = channelListSnapshot.getValue(ChannelList.class);
-                                    AllChannelList.add(new ChannelList(channel.getModeratorName(),channel.getModeratorID(), channel.getChannelName(), channelId));
-                                    customAdapter = new CustomAllChannelAdapter(getApplicationContext(), AllChannelList);
+                                    allChannelList.add(new ChannelList(channel.getModeratorName(),channel.getModeratorID(), channel.getChannelName(), channelId));
+                                    customAdapter = new CustomAllChannelAdapter(getApplicationContext(), allChannelList);
                                     channelList.setAdapter(customAdapter);
 
                                 } else {
@@ -142,7 +152,10 @@ public class AllChannelListActivity extends AppCompatActivity {
     }
 
     public void goBackButton(View view) {
-        startActivity(new Intent(AllChannelListActivity.this, UserChannelActivity.class));
+
+        Intent backIntent = new Intent(AllChannelListActivity.this, UserChannelActivity.class);
+        backIntent.putExtra("userName", userName);
+        startActivity(backIntent);
 
     }
 
@@ -157,6 +170,10 @@ public class AllChannelListActivity extends AppCompatActivity {
 
         menuDialog.setContentView(R.layout.menupopup);
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
+        txtUserName.setText(userName);
+
         menuDialog.show();
     }
 
@@ -189,7 +206,11 @@ public class AllChannelListActivity extends AppCompatActivity {
 
     public void myChannelPressed(View view) {
 
-        startActivity(new Intent(AllChannelListActivity.this, UserChannelActivity.class));
+        Intent myChannelIntent = new Intent(AllChannelListActivity.this, UserChannelActivity.class);
+
+        myChannelIntent.putExtra("userName", userName);
+        startActivity(myChannelIntent);
+
         finish();
     }
 
@@ -199,7 +220,11 @@ public class AllChannelListActivity extends AppCompatActivity {
 
     public void allChannelPressed(View view) {
 
-        startActivity(new Intent(AllChannelListActivity.this, AllChannelListActivity.class));
+        Intent allChannelIntent = new Intent(AllChannelListActivity.this, AllChannelListActivity.class);
+
+        allChannelIntent.putExtra("userName", userName);
+        startActivity(allChannelIntent);
+
         finish();
     }
 
@@ -209,7 +234,11 @@ public class AllChannelListActivity extends AppCompatActivity {
 
     public void myScorecardPressed(View view) {
 
-        startActivity(new Intent(AllChannelListActivity.this, MyScorecardChannelActivity.class));
+        Intent myScorecardIntent = new Intent(AllChannelListActivity.this, MyScorecardChannelActivity.class);
+
+        myScorecardIntent.putExtra("userName", userName);
+        startActivity(myScorecardIntent);
+
         finish();
     }
 
@@ -219,7 +248,10 @@ public class AllChannelListActivity extends AppCompatActivity {
 
     public void leaderboardPressed(View view) {
 
-        startActivity(new Intent(AllChannelListActivity.this, LeaderboardChannelActivity.class));
+        Intent myLeaderboardIntent = new Intent(AllChannelListActivity.this, LeaderboardChannelActivity.class);
+
+        myLeaderboardIntent.putExtra("userName", userName);
+        startActivity(myLeaderboardIntent);
         finish();
     }
 
@@ -232,6 +264,13 @@ public class AllChannelListActivity extends AppCompatActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    public void homeButton(View view){
+        Intent homeIntent = new Intent(AllChannelListActivity.this, HomeActivity.class);
+        homeIntent.putExtra("userName", userName);
+        startActivity(homeIntent);
+    }
+
 
 }
 

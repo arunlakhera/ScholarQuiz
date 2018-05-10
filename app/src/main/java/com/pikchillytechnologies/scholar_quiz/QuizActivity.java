@@ -114,6 +114,7 @@ public class QuizActivity extends AppCompatActivity {
         moderatorId = channelBundle.getString("moderatorId", "Moderator Id Default");
         quizListKey = channelBundle.getString("quizListKey", "Quiz Key");
         quizTitle = channelBundle.getString("quizTitle", "Quiz Title");
+        userName = channelBundle.getString("userName", "User Name");
 
         // Show Message if Network is not Available
         if (!isNetworkAvailable()) {
@@ -190,6 +191,7 @@ public class QuizActivity extends AppCompatActivity {
                 quizIntent.putExtra("moderatorId", moderatorId);
                 quizIntent.putExtra("quizListKey", quizListKey);
                 quizIntent.putExtra("quizTitle", quizTitle);
+                quizIntent.putExtra("userName", userName);
 
                 startActivity(quizIntent);
                 finish();
@@ -630,6 +632,8 @@ public class QuizActivity extends AppCompatActivity {
 
         menuDialog.setContentView(R.layout.menupopup);
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
+        txtUserName.setText(userName);
         menuDialog.show();
     }
 
@@ -662,7 +666,11 @@ public class QuizActivity extends AppCompatActivity {
 
     public void myChannelPressed(View view) {
 
-        startActivity(new Intent(QuizActivity.this, UserChannelActivity.class));
+        Intent myChannelIntent = new Intent(QuizActivity.this, UserChannelActivity.class);
+
+        myChannelIntent.putExtra("userName", userName);
+        startActivity(myChannelIntent);
+
         finish();
     }
 
@@ -672,7 +680,11 @@ public class QuizActivity extends AppCompatActivity {
 
     public void allChannelPressed(View view) {
 
-        startActivity(new Intent(QuizActivity.this, AllChannelListActivity.class));
+        Intent allChannelIntent = new Intent(QuizActivity.this, AllChannelListActivity.class);
+
+        allChannelIntent.putExtra("userName", userName);
+        startActivity(allChannelIntent);
+
         finish();
     }
 
@@ -682,7 +694,11 @@ public class QuizActivity extends AppCompatActivity {
 
     public void myScorecardPressed(View view) {
 
-        startActivity(new Intent(QuizActivity.this, MyScorecardChannelActivity.class));
+        Intent myScorecardIntent = new Intent(QuizActivity.this, MyScorecardChannelActivity.class);
+
+        myScorecardIntent.putExtra("userName", userName);
+        startActivity(myScorecardIntent);
+
         finish();
     }
 
@@ -692,7 +708,11 @@ public class QuizActivity extends AppCompatActivity {
 
     public void leaderboardPressed(View view) {
 
-        startActivity(new Intent(QuizActivity.this, LeaderboardChannelActivity.class));
+        Intent myLeaderboardIntent = new Intent(QuizActivity.this, LeaderboardChannelActivity.class);
+
+        myLeaderboardIntent.putExtra("userName", userName);
+        startActivity(myLeaderboardIntent);
+
         finish();
     }
 
@@ -706,5 +726,10 @@ public class QuizActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    public void homeButton(View view){
+        Intent homeIntent = new Intent(QuizActivity.this, HomeActivity.class);
+        homeIntent.putExtra("userName", userName);
+        startActivity(homeIntent);
+    }
 
 }

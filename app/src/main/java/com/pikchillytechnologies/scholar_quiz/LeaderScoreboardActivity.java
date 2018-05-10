@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,13 +80,13 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
         moderatorId = channelBundle.getString("moderatorId", "Moderator ID");
         quizListId = channelBundle.getString("quizListKey", "Quiz List ID");
         quizTitle = channelBundle.getString("quizTitle", "Quiz Title");
+        userName = channelBundle.getString("userName", "User Name");
 
         // Set Database Reference to Channel List
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mScoreListRef = mDatabase.child("SQ_Score/").child(channelId).child(quizListId);
-       // mQuizScoreRef = mDatabase.child("SQ_Score/");
-        mUserRef = mDatabase.child("SQ_Users/");
 
+        mUserRef = mDatabase.child("SQ_Users/");
 
         mScoreListRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -142,6 +143,7 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
                 quizListToUserChannelIntent.putExtra("channelName",channelName);
                 quizListToUserChannelIntent.putExtra("moderatorName",moderatorName);
                 quizListToUserChannelIntent.putExtra("moderatorId",moderatorId);
+                quizListToUserChannelIntent.putExtra("userName",userName);
 
                 startActivity(quizListToUserChannelIntent);
                 finish();
@@ -160,6 +162,10 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
 
         menuDialog.setContentView(R.layout.menupopup);
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
+        txtUserName.setText(userName);
+
         menuDialog.show();
     }
 
@@ -192,7 +198,11 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
 
     public void myChannelPressed(View view) {
 
-        startActivity(new Intent(LeaderScoreboardActivity.this, UserChannelActivity.class));
+        Intent myChannelIntent = new Intent(LeaderScoreboardActivity.this, UserChannelActivity.class);
+
+        myChannelIntent.putExtra("userName", userName);
+        startActivity(myChannelIntent);
+
         finish();
     }
 
@@ -202,7 +212,11 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
 
     public void allChannelPressed(View view) {
 
-        startActivity(new Intent(LeaderScoreboardActivity.this, AllChannelListActivity.class));
+        Intent allChannelIntent = new Intent(LeaderScoreboardActivity.this, AllChannelListActivity.class);
+
+        allChannelIntent.putExtra("userName", userName);
+        startActivity(allChannelIntent);
+
         finish();
     }
 
@@ -212,7 +226,11 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
 
     public void myScorecardPressed(View view) {
 
-        startActivity(new Intent(LeaderScoreboardActivity.this, MyScorecardChannelActivity.class));
+        Intent myScorecardIntent = new Intent(LeaderScoreboardActivity.this, MyScorecardChannelActivity.class);
+
+        myScorecardIntent.putExtra("userName", userName);
+        startActivity(myScorecardIntent);
+
         finish();
     }
 
@@ -222,7 +240,11 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
 
     public void leaderboardPressed(View view) {
 
-        startActivity(new Intent(LeaderScoreboardActivity.this, LeaderboardChannelActivity.class));
+        Intent myLeaderboardIntent = new Intent(LeaderScoreboardActivity.this, LeaderboardChannelActivity.class);
+
+        myLeaderboardIntent.putExtra("userName", userName);
+        startActivity(myLeaderboardIntent);
+
         finish();
     }
 
@@ -236,7 +258,11 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-
+    public void homeButton(View view){
+        Intent homeIntent = new Intent(LeaderScoreboardActivity.this, HomeActivity.class);
+        homeIntent.putExtra("userName", userName);
+        startActivity(homeIntent);
+    }
 
 
 }
