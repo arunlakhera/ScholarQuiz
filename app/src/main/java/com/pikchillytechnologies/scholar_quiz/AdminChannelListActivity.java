@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +38,9 @@ public class AdminChannelListActivity extends AppCompatActivity {
     List<ChannelList> adminAllChannelList;
     ChannelList channel = new ChannelList();
 
+    SearchView searchChannel;
+    List<ChannelList> searchAllChannelList;
+
     String channelId;
     String channelName;
     String moderatorName;
@@ -55,6 +59,9 @@ public class AdminChannelListActivity extends AppCompatActivity {
         adminAllChannelListView = findViewById(R.id.listView_AllChannel);
         adminAllChannelList = new ArrayList<>();
 
+        searchChannel  = findViewById(R.id.searchview_Channel);
+        searchAllChannelList = new ArrayList<>();
+
         // To get User id of Current user so we can travel to Subscription List of User
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -70,33 +77,28 @@ public class AdminChannelListActivity extends AppCompatActivity {
          * Code to Read All Channel List from Firebase and show them in Channel List Activity
          */
 
-        // Read all the channels name from Firebase
         mChannelRef.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot channelSnapshot) {
 
-                // Clear the Channel List View
-                //AllChannelList.clear();
-
-                // Check the count of Channels to subscribe to. If no channel, show message else show list of channels
                 if (channelSnapshot.getChildrenCount() < 1) {
                     Toast.makeText(AdminChannelListActivity.this, "No Channel to Subscribe", Toast.LENGTH_LONG).show();
 
                 } else {
 
-                    // Loop through all channel lists
                     for ( DataSnapshot channelListSnapshot : channelSnapshot.getChildren()) {
 
                         channelId = String.valueOf(channelListSnapshot.getKey());
+                        channelName = String.valueOf(channelListSnapshot.child("Name").getValue());
+                        moderatorName = String.valueOf(channelListSnapshot.child("Moderator").getValue());
+                        moderatorId = String.valueOf(channelListSnapshot.child("ModeratorID").getValue());
 
                         // Show channels available to user
                         channel = channelListSnapshot.getValue(ChannelList.class);
-                        adminAllChannelList.add(new ChannelList(channel.getModeratorName(),channel.getModeratorID(), channel.getChannelName(), channelId));
+                        adminAllChannelList.add(new ChannelList(moderatorName,moderatorId, channelName, channelId));
                         customAdapter = new CustomAdminAllChannelAdapter(getApplicationContext(), adminAllChannelList);
                         adminAllChannelListView.setAdapter(customAdapter);
                     }
-
                 }
 
             }
@@ -105,8 +107,8 @@ public class AdminChannelListActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getMessage());
             }
-
         });
+
 
         adminAllChannelListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -131,6 +133,90 @@ public class AdminChannelListActivity extends AppCompatActivity {
 
                 startActivity(userListIntent);
 
+            }
+        });
+
+        searchChannel.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            Boolean foundFlag = false;
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                searchAllChannelList.clear();
+
+                if(!query.isEmpty()) {
+
+                    for (int i = 0; i < adminAllChannelList.size(); i++) {
+
+                        if (adminAllChannelList.get(i).getChannelName().equals(query)) {
+
+                            searchAllChannelList.add(new ChannelList(adminAllChannelList.get(i).getModeratorName(), adminAllChannelList.get(i).getModeratorID(), adminAllChannelList.get(i).getChannelName(), adminAllChannelList.get(i).getChannelId()));
+                            customAdapter = new CustomAdminAllChannelAdapter(getApplicationContext(), searchAllChannelList);
+                            adminAllChannelListView.setAdapter(customAdapter);
+
+                            foundFlag = true;
+
+                            break;
+
+                        } else {
+                            foundFlag = false;
+                        }
+
+                    }
+
+                    if (!foundFlag) {
+
+                        // Toast.makeText(AdminChannelListActivity.this, "No Match Found", Toast.LENGTH_LONG).show();
+                        customAdapter = new CustomAdminAllChannelAdapter(getApplicationContext(), adminAllChannelList);
+                        adminAllChannelListView.setAdapter(customAdapter);
+                    }
+                }else {
+
+                    customAdapter = new CustomAdminAllChannelAdapter(getApplicationContext(), adminAllChannelList);
+                    adminAllChannelListView.setAdapter(customAdapter);
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                searchAllChannelList.clear();
+
+                if(!newText.isEmpty()) {
+
+                    for (int i = 0; i < adminAllChannelList.size(); i++) {
+
+                        if (adminAllChannelList.get(i).getChannelName().equals(newText)) {
+
+                            searchAllChannelList.add(new ChannelList(adminAllChannelList.get(i).getModeratorName(), adminAllChannelList.get(i).getModeratorID(), adminAllChannelList.get(i).getChannelName(), adminAllChannelList.get(i).getChannelId()));
+                            customAdapter = new CustomAdminAllChannelAdapter(getApplicationContext(), searchAllChannelList);
+                            adminAllChannelListView.setAdapter(customAdapter);
+
+                            foundFlag = true;
+
+                            break;
+
+                        } else {
+                            foundFlag = false;
+                        }
+
+                    }
+
+                    if (!foundFlag) {
+
+                        // Toast.makeText(AdminChannelListActivity.this, "No Match Found", Toast.LENGTH_LONG).show();
+                        customAdapter = new CustomAdminAllChannelAdapter(getApplicationContext(), adminAllChannelList);
+                        adminAllChannelListView.setAdapter(customAdapter);
+                    }
+                }else {
+
+                    customAdapter = new CustomAdminAllChannelAdapter(getApplicationContext(), adminAllChannelList);
+                    adminAllChannelListView.setAdapter(customAdapter);
+                }
+                return false;
             }
         });
 

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,9 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
     List<ChannelList> leaderboardChannelList;
     ChannelList leaderboardChannel = new ChannelList();
     String channelExist = "N";
+
+    SearchView searchLeaderboardChannel;
+    List<ChannelList> searchLeaderboardChannelList;
 
     //Database Reference
     private DatabaseReference mDatabase;
@@ -70,6 +74,9 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
         // ListView to show list of channels available
         leaderboardChannelListview = findViewById(R.id.listView_leaderboard_Channel);
         leaderboardChannelList = new ArrayList<>();
+
+        searchLeaderboardChannel = findViewById(R.id.searchview_LeaderboardChannel);
+        searchLeaderboardChannelList = new ArrayList<>();
 
         // To get User id of Current user so we can travel to Subscription List of User
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -120,10 +127,13 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
                                 if (channelExist.equals("Y")) {
 
                                     channelId = String.valueOf(channelListSnapshot.getKey());
+                                    channelName = String.valueOf(channelListSnapshot.child("Name").getValue());
+                                    moderatorName = String.valueOf(channelListSnapshot.child("Moderator").getValue());
+                                    moderatorId = String.valueOf(channelListSnapshot.child("ModeratorID").getValue());
 
                                     // Show channels available to user
                                     leaderboardChannel = channelListSnapshot.getValue(ChannelList.class);
-                                    leaderboardChannelList.add(new ChannelList(leaderboardChannel.getModeratorName(), leaderboardChannel.getModeratorID(), leaderboardChannel.getChannelName(), channelId));
+                                    leaderboardChannelList.add(new ChannelList(moderatorName, moderatorId, channelName, channelId));
 
                                     customAdapter = new CustomLeaderboardChannelAdapter(getApplicationContext(), leaderboardChannelList);
                                     leaderboardChannelListview.setAdapter(customAdapter);
@@ -184,6 +194,101 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
                 Intent backIntent = new Intent(LeaderboardChannelActivity.this, HomeActivity.class);
                 backIntent.putExtra("userName", userName);
                 startActivity(backIntent);
+            }
+        });
+
+        searchLeaderboardChannel.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            Boolean foundFlag = false;
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                searchLeaderboardChannelList.clear();
+
+                if (!query.isEmpty()) {
+
+                    for (int i = 0; i < leaderboardChannelList.size(); i++) {
+
+                        channelId = String.valueOf(leaderboardChannelList.get(i).getChannelId());
+                        channelName = String.valueOf(leaderboardChannelList.get(i).getChannelName());
+                        moderatorName = String.valueOf(leaderboardChannelList.get(i).getModeratorName());
+                        moderatorId = String.valueOf(leaderboardChannelList.get(i).getModeratorID());
+
+                        if(channelName.equals(query)) {
+
+                            searchLeaderboardChannelList.add(new ChannelList(moderatorName,moderatorId,channelName,channelId));
+
+                            customAdapter = new CustomLeaderboardChannelAdapter(getApplicationContext(), searchLeaderboardChannelList);
+                            leaderboardChannelListview.setAdapter(customAdapter);
+
+                            foundFlag = true;
+                            break;
+
+                        }else {
+                            foundFlag = false;
+
+                        }
+
+                    }
+
+                    if (!foundFlag) {
+
+                        customAdapter = new CustomLeaderboardChannelAdapter(getApplicationContext(), leaderboardChannelList);
+                        leaderboardChannelListview.setAdapter(customAdapter);
+                    }
+
+                }else {
+
+                    customAdapter = new CustomLeaderboardChannelAdapter(getApplicationContext(), leaderboardChannelList);
+                    leaderboardChannelListview.setAdapter(customAdapter);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                searchLeaderboardChannelList.clear();
+
+                if (!newText.isEmpty()) {
+
+                    for (int i = 0; i < leaderboardChannelList.size(); i++) {
+
+                        channelId = String.valueOf(leaderboardChannelList.get(i).getChannelId());
+                        channelName = String.valueOf(leaderboardChannelList.get(i).getChannelName());
+                        moderatorName = String.valueOf(leaderboardChannelList.get(i).getModeratorName());
+                        moderatorId = String.valueOf(leaderboardChannelList.get(i).getModeratorID());
+
+                        if(channelName.equals(newText)) {
+
+                            searchLeaderboardChannelList.add(new ChannelList(moderatorName,moderatorId,channelName,channelId));
+
+                            customAdapter = new CustomLeaderboardChannelAdapter(getApplicationContext(), searchLeaderboardChannelList);
+                            leaderboardChannelListview.setAdapter(customAdapter);
+
+                            foundFlag = true;
+                            break;
+
+                        }else {
+                            foundFlag = false;
+
+                        }
+
+                    }
+
+                    if (!foundFlag) {
+
+                        customAdapter = new CustomLeaderboardChannelAdapter(getApplicationContext(), leaderboardChannelList);
+                        leaderboardChannelListview.setAdapter(customAdapter);
+                    }
+
+                }else {
+
+                    customAdapter = new CustomLeaderboardChannelAdapter(getApplicationContext(), leaderboardChannelList);
+                    leaderboardChannelListview.setAdapter(customAdapter);
+                }
+                return false;
             }
         });
 

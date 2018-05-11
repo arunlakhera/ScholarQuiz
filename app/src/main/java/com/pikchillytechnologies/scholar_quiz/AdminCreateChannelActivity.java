@@ -1,9 +1,11 @@
 package com.pikchillytechnologies.scholar_quiz;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +28,7 @@ public class AdminCreateChannelActivity extends AppCompatActivity {
     String channelName;
     Boolean channelFlag = false;
     EditText channel_EditText;
+    String channelId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +52,25 @@ public class AdminCreateChannelActivity extends AppCompatActivity {
                 createNewChannel();
 
                 if (channelFlag) {
-                    Toast.makeText(AdminCreateChannelActivity.this, "Channel Created Successfully..", Toast.LENGTH_SHORT).show();
 
                     //Show Dialog box to Admin to Assign the Moderator now or later. If now take Admin to users Screen to select user
+                    showAlertDialog("New Channel Created",channelName + " created. Do you want to assign Moderator to this channel?");
 
                     // Set Channel Edit text to blank
                     channel_EditText.setText("");
 
-                    // Move the user to Channel List if user wants to assign the moderator to channel created
-
-                    startActivity(new Intent(AdminCreateChannelActivity.this, AdminChannelListActivity.class));
                 }
             }
         });
+
+
+        findViewById(R.id.back_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AdminCreateChannelActivity.this, AdminHomeActivity.class));
+            }
+        });
+
 
     }
 
@@ -69,7 +78,7 @@ public class AdminCreateChannelActivity extends AppCompatActivity {
 
         mChannelRef = mDatabase.child("ChannelList/").push();
 
-        String bookKey = String.valueOf(mChannelRef.getKey());
+        channelId = String.valueOf(mChannelRef.getKey());
 
         moderatorId = user.getUid();
         moderatorName = "Admin";
@@ -81,7 +90,7 @@ public class AdminCreateChannelActivity extends AppCompatActivity {
             Toast.makeText(AdminCreateChannelActivity.this,"Please Provide Channel Name..",Toast.LENGTH_SHORT).show();
         }else {
             // Save the Users information in Users table in Firebase
-            mChannelListRef = mDatabase.child("SQ_ChannelList/"+ bookKey);
+            mChannelListRef = mDatabase.child("SQ_ChannelList/"+ channelId);
 
             mChannelListRef.child("Moderator").setValue(moderatorName);
             mChannelListRef.child("ModeratorID").setValue(moderatorId);
@@ -92,9 +101,6 @@ public class AdminCreateChannelActivity extends AppCompatActivity {
 
     }
 
-    public void backButton(View view){
-        startActivity(new Intent(AdminCreateChannelActivity.this, AdminHomeActivity.class));
-    }
 
     /**
      * Function to check if Device is connected to Internet
@@ -105,5 +111,40 @@ public class AdminCreateChannelActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    private void showAlertDialog(String title,String message){
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setCancelable(true);
+
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Intent moderatorIntent = new Intent(AdminCreateChannelActivity.this, AdminUserListActivity.class);
+
+                moderatorIntent.putExtra("channelId",channelId);
+                moderatorIntent.putExtra("channelName",channelName);
+                moderatorIntent.putExtra("moderatorID",moderatorName);
+                moderatorIntent.putExtra("moderatorID",moderatorName);
+
+                startActivity(moderatorIntent);
+                finish();
+            }
+        });
+
+        alertDialogBuilder.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                finish();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
 
 }

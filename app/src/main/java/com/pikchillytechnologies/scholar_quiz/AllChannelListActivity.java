@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,8 +42,15 @@ public class AllChannelListActivity extends AppCompatActivity {
     List<ChannelList> allChannelList;
     ChannelList channel = new ChannelList();
 
+    SearchView searchAllChannel;
+    List<ChannelList> searchAllChannelList;
+
     String channelExist = "N";
+
     String channelId;
+    String channelName;
+    String moderatorName;
+    String moderatorId;
 
     Bundle userBundle;
     String userId;
@@ -64,6 +72,9 @@ public class AllChannelListActivity extends AppCompatActivity {
         // ListView to show list of channels available
         channelList = findViewById(R.id.listView_Channel);
         allChannelList = new ArrayList<>();
+
+        searchAllChannel = findViewById(R.id.searchview_AllChannel);
+        searchAllChannelList = new ArrayList<>();
 
         // To get User id of Current user so we can travel to Subscription List of User
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -118,10 +129,13 @@ public class AllChannelListActivity extends AppCompatActivity {
                                 if (channelExist.equals("N")) {
 
                                     channelId = String.valueOf(channelListSnapshot.getKey());
+                                    channelName = String.valueOf(channelListSnapshot.child("Name").getValue());
+                                    moderatorName = String.valueOf(channelListSnapshot.child("Moderator").getValue());
+                                    moderatorId = String.valueOf(channelListSnapshot.child("ModeratorID").getValue());
 
                                     // Show channels available to user
                                     channel = channelListSnapshot.getValue(ChannelList.class);
-                                    allChannelList.add(new ChannelList(channel.getModeratorName(),channel.getModeratorID(), channel.getChannelName(), channelId));
+                                    allChannelList.add(new ChannelList(moderatorName,moderatorId, channelName, channelId));
                                     customAdapter = new CustomAllChannelAdapter(getApplicationContext(), allChannelList);
                                     channelList.setAdapter(customAdapter);
 
@@ -148,6 +162,104 @@ public class AllChannelListActivity extends AppCompatActivity {
             }
 
         });
+
+        searchAllChannel.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            Boolean foundFlag = false;
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                searchAllChannelList.clear();
+
+                if (!query.isEmpty()) {
+
+                    for (int i = 0; i < allChannelList.size(); i++) {
+
+                        channelId = String.valueOf(allChannelList.get(i).getChannelId());
+                        channelName = String.valueOf(allChannelList.get(i).getChannelName());
+                        moderatorName = String.valueOf(allChannelList.get(i).getModeratorName());
+                        moderatorId = String.valueOf(allChannelList.get(i).getModeratorID());
+
+                        if(channelName.equals(query)) {
+
+                            searchAllChannelList.add(new ChannelList(moderatorName,moderatorId,channelName,channelId));
+
+                            customAdapter = new CustomAllChannelAdapter(getApplicationContext(), searchAllChannelList);
+                            channelList.setAdapter(customAdapter);
+
+                            foundFlag = true;
+                            break;
+
+                        }else {
+                            foundFlag = false;
+
+                        }
+
+                    }
+
+                    if (!foundFlag) {
+
+                        customAdapter = new CustomAllChannelAdapter(getApplicationContext(), allChannelList);
+                        channelList.setAdapter(customAdapter);
+                    }
+
+                }else {
+
+                    customAdapter = new CustomAllChannelAdapter(getApplicationContext(), allChannelList);
+                    channelList.setAdapter(customAdapter);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                searchAllChannelList.clear();
+
+                if (!newText.isEmpty()) {
+
+                    for (int i = 0; i < allChannelList.size(); i++) {
+
+                        channelId = String.valueOf(allChannelList.get(i).getChannelId());
+                        channelName = String.valueOf(allChannelList.get(i).getChannelName());
+                        moderatorName = String.valueOf(allChannelList.get(i).getModeratorName());
+                        moderatorId = String.valueOf(allChannelList.get(i).getModeratorID());
+
+                        if(channelName.equals(newText)) {
+
+                            searchAllChannelList.add(new ChannelList(moderatorName,moderatorId,channelName,channelId));
+
+                            customAdapter = new CustomAllChannelAdapter(getApplicationContext(), searchAllChannelList);
+                            channelList.setAdapter(customAdapter);
+
+                            foundFlag = true;
+                            break;
+
+                        }else {
+                            foundFlag = false;
+
+                        }
+
+                    }
+
+                    if (!foundFlag) {
+
+                        customAdapter = new CustomAllChannelAdapter(getApplicationContext(), allChannelList);
+                        channelList.setAdapter(customAdapter);
+                    }
+
+                }else {
+
+                    customAdapter = new CustomAllChannelAdapter(getApplicationContext(), allChannelList);
+                    channelList.setAdapter(customAdapter);
+                }
+
+                return false;
+            }
+        });
+
+
 
     }
 

@@ -34,7 +34,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/menubutton_yellow"
+        android:background="@drawable/design_button_yellow"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
@@ -68,11 +68,22 @@
         android:onClick="homeButton"
         />
 
+    <SearchView
+        android:id="@+id/searchview_Channel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/title_ImageView"
+        android:background="@drawable/leaderboard_blue_bg"
+        />
+
     <ListView
         android:id="@+id/listView_AllChannel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title_ImageView"
+        android:layout_below="@id/searchview_Channel"
         android:divider="#000000"
         android:footerDividersEnabled="false"
 

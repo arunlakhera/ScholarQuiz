@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,9 @@ public class UserChannelActivity extends AppCompatActivity {
     List<ChannelList> userChannelList;
     ChannelList userChannel = new ChannelList();
     String channelExist = "N";
+
+    SearchView searchUserChannel;
+    List<ChannelList> searchAllUserChannelList;
 
     //Database Reference
     private DatabaseReference mChannelRef;
@@ -70,6 +74,9 @@ public class UserChannelActivity extends AppCompatActivity {
         // ListView to show list of channels available
         channelList = findViewById(R.id.listView_UserChannel);
         userChannelList = new ArrayList<>();
+
+        searchUserChannel = findViewById(R.id.searchview_UserChannel);
+        searchAllUserChannelList = new ArrayList<>();
 
         // To get User id of Current user so we can travel to Subscription List of User
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -126,10 +133,13 @@ public class UserChannelActivity extends AppCompatActivity {
                                 if (channelExist.equals("Y")) {
 
                                     channelId = String.valueOf(channelListSnapshot.getKey());
+                                    channelName = String.valueOf(channelListSnapshot.child("Name").getValue());
+                                    moderatorName = String.valueOf(channelListSnapshot.child("Moderator").getValue());
+                                    moderatorId = String.valueOf(channelListSnapshot.child("ModeratorID").getValue());
 
                                     // Show channels available to user
                                     userChannel = channelListSnapshot.getValue(ChannelList.class);
-                                    userChannelList.add(new ChannelList(userChannel.getModeratorName(), userChannel.getModeratorID(), userChannel.getChannelName(), channelId));
+                                    userChannelList.add(new ChannelList(moderatorName, moderatorId, channelName, channelId));
 
                                     customAdapter = new CustomUserChannelAdapter(getApplicationContext(), userChannelList);
                                     channelList.setAdapter(customAdapter);
@@ -209,7 +219,106 @@ public class UserChannelActivity extends AppCompatActivity {
             }
         });
 
+
+        searchUserChannel.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            Boolean foundFlag = false;
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                searchAllUserChannelList.clear();
+
+                if (!query.isEmpty()) {
+
+                    for (int i = 0; i < userChannelList.size(); i++) {
+
+                        channelId = String.valueOf(userChannelList.get(i).getChannelId());
+                        channelName = String.valueOf(userChannelList.get(i).getChannelName());
+                        moderatorName = String.valueOf(userChannelList.get(i).getModeratorName());
+                        moderatorId = String.valueOf(userChannelList.get(i).getModeratorID());
+
+                        if(channelName.equals(query)) {
+
+                            searchAllUserChannelList.add(new ChannelList(moderatorName,moderatorId,channelName,channelId));
+
+                            customAdapter = new CustomUserChannelAdapter(getApplicationContext(), searchAllUserChannelList);
+                            channelList.setAdapter(customAdapter);
+
+                            foundFlag = true;
+                            break;
+
+                        }else {
+                            foundFlag = false;
+
+                        }
+
+                    }
+
+                    if (!foundFlag) {
+
+                        customAdapter = new CustomUserChannelAdapter(getApplicationContext(), userChannelList);
+                        channelList.setAdapter(customAdapter);
+                    }
+
+                }else {
+
+                    customAdapter = new CustomUserChannelAdapter(getApplicationContext(), userChannelList);
+                    channelList.setAdapter(customAdapter);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                searchAllUserChannelList.clear();
+
+                if (!newText.isEmpty()) {
+
+                    for (int i = 0; i < userChannelList.size(); i++) {
+
+                        channelId = String.valueOf(userChannelList.get(i).getChannelId());
+                        channelName = String.valueOf(userChannelList.get(i).getChannelName());
+                        moderatorName = String.valueOf(userChannelList.get(i).getModeratorName());
+                        moderatorId = String.valueOf(userChannelList.get(i).getModeratorID());
+
+                        if(channelName.equals(newText)) {
+
+                            searchAllUserChannelList.add(new ChannelList(moderatorName,moderatorId,channelName,channelId));
+
+                            customAdapter = new CustomUserChannelAdapter(getApplicationContext(), searchAllUserChannelList);
+                            channelList.setAdapter(customAdapter);
+
+                            foundFlag = true;
+                            break;
+
+                        }else {
+                            foundFlag = false;
+
+                        }
+
+                    }
+
+                    if (!foundFlag) {
+
+                        customAdapter = new CustomUserChannelAdapter(getApplicationContext(), userChannelList);
+                        channelList.setAdapter(customAdapter);
+                    }
+
+                }else {
+
+                    customAdapter = new CustomUserChannelAdapter(getApplicationContext(), userChannelList);
+                    channelList.setAdapter(customAdapter);
+                }
+
+                return false;
+            }
+        });
+
     }
+
+
 
     /**
      * Menu Functions

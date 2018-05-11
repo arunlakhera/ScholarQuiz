@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
     List<QuizList> channelQuizList;
     QuizList quizList = new QuizList();
 
+
+
     //Database Reference
     DatabaseReference mDatabase;
     private DatabaseReference mScoreListRef;
@@ -70,6 +73,8 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
         // ListView to show list of Quiz User has taken in the channel
         quizListView = findViewById(R.id.listView_Scoreboard);
         channelQuizList = new ArrayList<>();
+
+
 
         // Declare variable to get values passed from channelActivity
         channelBundle = getIntent().getExtras();
@@ -149,6 +154,11 @@ public class LeaderScoreboardActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
+
+
+
     }
 
     /**

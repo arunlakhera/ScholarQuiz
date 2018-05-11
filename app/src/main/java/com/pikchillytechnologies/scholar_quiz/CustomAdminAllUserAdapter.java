@@ -55,13 +55,6 @@ public class CustomAdminAllUserAdapter extends ArrayAdapter<UserList> {
         userNameTextView.setText(String.valueOf(user.getName()));
         userEmailTextView.setText(String.valueOf("Email ID: " + user.getEmailId()));
 
-        /**
-         * When User clicks on Channel in Channel List
-         * - Add the UserId to Subscription Table in Firebase
-         * - Add the channel id to Subscription Table in Firebase
-         * - Set the Flag to Y for the Channel
-         * */
-
         return convertView;
     }
 }
