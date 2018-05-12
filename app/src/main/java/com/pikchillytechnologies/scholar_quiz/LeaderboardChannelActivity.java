@@ -336,6 +336,16 @@ public class LeaderboardChannelActivity extends AppCompatActivity {
         }
     }
 
+
+    public void editProfilePressed(View view) {
+
+        Intent editProfileIntent = new Intent(LeaderboardChannelActivity.this, UserProfileActivity.class);
+        startActivity(editProfileIntent);
+
+        finish();
+
+    }
+
     /**
      * 4. Function to execute when user presses MyChannel
      * */

@@ -23,6 +23,7 @@ public class HomeActivity extends AppCompatActivity {
     Bundle userBundle;
     String userId;
     String userName;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,40 +34,10 @@ public class HomeActivity extends AppCompatActivity {
 
         userBundle = getIntent().getExtras();
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = String.valueOf(user.getUid());
+
         userName = userBundle.getString("userName","User Name");
-/*
-        // Direct User to channels user has subscribed to
-        findViewById(R.id.myChannelButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, UserChannelActivity.class));
-            }
-        });
-
-        // Direct User to all the channels available
-        findViewById(R.id.allChannelButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, AllChannelListActivity.class));
-            }
-        });
-
-        // Direct User to list of all Scores in all quiz user has participated
-        findViewById(R.id.myScorecardButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, MyScorecardChannelActivity.class));
-            }
-        });
-
-        // Direct User to a list of Leaderboard showing the highest score in a particular quiz
-        findViewById(R.id.leaderboardButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, LeaderboardChannelActivity.class));
-            }
-        });
-*/
     }
 
     /**
@@ -108,6 +79,15 @@ public class HomeActivity extends AppCompatActivity {
             Toast.makeText(HomeActivity.this, "To Log Out, Please Connect your Phone to Internet..", Toast.LENGTH_SHORT).show();
 
         }
+    }
+
+    public void editProfilePressed(View view) {
+
+        Intent editProfileIntent = new Intent(HomeActivity.this, UserProfileActivity.class);
+        startActivity(editProfileIntent);
+
+        finish();
+
     }
 
     /**

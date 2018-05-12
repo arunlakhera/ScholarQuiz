@@ -34,9 +34,9 @@
         >
         <ImageView
             android:id="@+id/imageview_UserImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher_round"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/userimage_default"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             />
@@ -58,7 +58,7 @@
             android:textColor="@color/orange"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:onClick="editProfile"
+            android:onClick="editProfilePressed"
             />
 
     </LinearLayout>
@@ -152,9 +152,5 @@
         android:layout_centerHorizontal="true"
         android:onClick="logout"
         />
-
-
-
-
 
 </RelativeLayout>

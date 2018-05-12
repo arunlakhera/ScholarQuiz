@@ -1,6 +1,7 @@
 package com.pikchillytechnologies.scholar_quiz;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -97,6 +99,10 @@ public class UserChannelActivity extends AppCompatActivity {
          * Code to Read All Channel List from Firebase and show them in Channel List Activity
          */
 
+    //    final ProgressDialog progressDialog = new ProgressDialog(this);
+     //   progressDialog.setTitle("Loading...");
+      //  progressDialog.show();
+
         // Read all the channels name from Firebase
         mChannelRef.addValueEventListener(new ValueEventListener() {
 
@@ -157,12 +163,14 @@ public class UserChannelActivity extends AppCompatActivity {
 
                 }
 
+               // progressDialog.dismiss();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getMessage());
             }
+
 
         });
 
@@ -359,6 +367,16 @@ public class UserChannelActivity extends AppCompatActivity {
             Toast.makeText(UserChannelActivity.this, "To Log Out, Please Connect your Phone to Internet..", Toast.LENGTH_SHORT).show();
 
         }
+    }
+
+
+    public void editProfilePressed(View view) {
+
+        Intent editProfileIntent = new Intent(UserChannelActivity.this, UserProfileActivity.class);
+        startActivity(editProfileIntent);
+
+        finish();
+
     }
 
     /**
