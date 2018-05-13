@@ -1,5 +1,7 @@
 package com.pikchillytechnologies.scholar_quiz;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,9 +12,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -106,6 +110,10 @@ public class UserChannelActivity extends AppCompatActivity {
         if (!isNetworkAvailable()) {
             Toast.makeText(UserChannelActivity.this, "To view your subscribed channels, Please Connect your Phone to Internet..", Toast.LENGTH_SHORT).show();
         }
+
+
+        blinkTextView();
+
 
         /**
          * Code to Read All Channel List from Firebase and show them in Channel List Activity
@@ -338,6 +346,30 @@ public class UserChannelActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void blinkTextView(){
+        final Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int timeToBlink = 1000;    //in milissegunds
+                try{Thread.sleep(timeToBlink);}catch (Exception e) {}
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView txtBlink = findViewById(R.id.textView_BlinkText);
+
+                        if(txtBlink .getVisibility() == View.VISIBLE){
+                            txtBlink .setVisibility(View.INVISIBLE);
+                        }else{
+                            txtBlink .setVisibility(View.VISIBLE);
+                        }
+                        blinkTextView();
+                    }
+                });
+            }
+        }).start();
     }
 
 

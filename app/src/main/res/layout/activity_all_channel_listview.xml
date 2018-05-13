@@ -93,12 +93,23 @@
         android:id="@+id/button_Back"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_above="@id/textView_BlinkMsg"
         android:background="@drawable/backbutton_yellow"
         android:onClick="goBackButton" />
+    <TextView
+        android:id="@+id/textView_BlinkMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Select Any Channel to Subscribe"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        android:textColor="#26C6DA"
+        android:background="#636363"
+        />
 
 </RelativeLayout>

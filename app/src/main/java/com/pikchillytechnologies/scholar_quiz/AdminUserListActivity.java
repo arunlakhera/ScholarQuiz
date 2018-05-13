@@ -59,7 +59,7 @@ public class AdminUserListActivity extends AppCompatActivity {
     String mChannelName;
     String mChannelId;
 
-
+    UserList itemSelected;
     Bundle channelBundle;
 
     @Override
@@ -126,10 +126,11 @@ public class AdminUserListActivity extends AppCompatActivity {
 
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 // Variable to store selected item
-                UserList itemSelected = allUserList.get(position);
+                itemSelected = allUserList.get(i);
+
 
                 // Variables to store Channel Information to pass to quizList Activity
                 channelId = String.valueOf(itemSelected.getChannelId());
@@ -162,7 +163,6 @@ public class AdminUserListActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 searchAllUserList.clear();
 
                 if (!query.isEmpty()) {
@@ -197,6 +197,8 @@ public class AdminUserListActivity extends AppCompatActivity {
 
                         customAdapter = new CustomAdminAllUserAdapter(getApplicationContext(), allUserList);
                         userListView.setAdapter(customAdapter);
+                    }else {
+                        getSelectedUSer();
                     }
 
                 }else {
@@ -244,6 +246,8 @@ public class AdminUserListActivity extends AppCompatActivity {
 
                         customAdapter = new CustomAdminAllUserAdapter(getApplicationContext(), allUserList);
                         userListView.setAdapter(customAdapter);
+                    }else {
+                        getSelectedUSer();
                     }
 
                 }else {
@@ -251,12 +255,45 @@ public class AdminUserListActivity extends AppCompatActivity {
                     customAdapter = new CustomAdminAllUserAdapter(getApplicationContext(), allUserList);
                     userListView.setAdapter(customAdapter);
                 }
-
-
                 return false;
             }
         });
 
+    }
+
+    public void getSelectedUSer(){
+
+        userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                // Variable to store selected item
+                itemSelected = searchAllUserList.get(i);
+
+
+                // Variables to store Channel Information to pass to quizList Activity
+                channelId = String.valueOf(itemSelected.getChannelId());
+                channelName = String.valueOf(itemSelected.getChannelName());
+                moderatorName = String.valueOf(itemSelected.getName());
+                moderatorId = String.valueOf(itemSelected.getUserId());
+
+                userId = String.valueOf(itemSelected.getUserId());
+                adminFlag = String.valueOf(itemSelected.getAdminFlag());
+                moderatorFlag = String.valueOf(itemSelected.getModeratorFlag());
+
+                if (moderatorFlag.equals("No")) {
+
+                    //Toast.makeText(AdminUserListActivity.this,"You selected " + moderatorName + " as Moderator for Channel " + channelName,Toast.LENGTH_SHORT).show();
+
+                    showAlertDialog("Moderator Selected", "Assign " + moderatorName + " as the Moderator of Channel " + channelName + "?");
+
+
+                } else {
+                    Toast.makeText(AdminUserListActivity.this, moderatorName + " is already a Moderator. Please select other User", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
     public void updateData() {

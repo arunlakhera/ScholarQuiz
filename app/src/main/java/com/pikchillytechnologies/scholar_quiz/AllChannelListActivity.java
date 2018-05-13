@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -92,6 +93,8 @@ public class AllChannelListActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         userId = String.valueOf(user.getUid());
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        blinkTextView();
 
         storage = FirebaseStorage.getInstance();
         downloadImageStorageReference = storage.getReferenceFromUrl("gs://scholarquiz-e4b55.appspot.com").child("images/").child(userId);
@@ -277,6 +280,30 @@ public class AllChannelListActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void blinkTextView(){
+        final Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int timeToBlink = 1000;    //in milissegunds
+                try{Thread.sleep(timeToBlink);}catch (Exception e) {}
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView txtBlink = findViewById(R.id.textView_BlinkMsg);
+
+                        if(txtBlink .getVisibility() == View.VISIBLE){
+                            txtBlink .setVisibility(View.INVISIBLE);
+                        }else{
+                            txtBlink .setVisibility(View.VISIBLE);
+                        }
+                        blinkTextView();
+                    }
+                });
+            }
+        }).start();
     }
 
     public void goBackButton(View view) {
