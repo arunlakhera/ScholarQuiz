@@ -159,7 +159,6 @@ public class AllChannelListActivity extends AppCompatActivity {
                                     channelExist = "N";
                                 }
 
-
                             }
 
                             @Override

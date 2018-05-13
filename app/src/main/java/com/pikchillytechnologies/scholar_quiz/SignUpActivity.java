@@ -156,12 +156,12 @@ public class SignUpActivity extends AppCompatActivity {
                                             String errorCode = ((FirebaseAuthUserCollisionException) task.getException()).getErrorCode();
 
                                             if (errorCode.equals("ERROR_EMAIL_ALREADY_IN_USE")) {
-                                                err += "User already exists. You can use different Email ID to Sign Up...";
+                                                err = "User already exists. You can use different Email ID to Sign Up...";
+                                                Toast.makeText(SignUpActivity.this, err, Toast.LENGTH_SHORT).show();
                                             }else{
-                                                err += errorCode;
+                                                err = errorCode;
                                             }
 
-                                            Toast.makeText(SignUpActivity.this, err, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });

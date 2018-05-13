@@ -80,7 +80,7 @@ public class AdminChannelListActivity extends AppCompatActivity {
         mChannelRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot channelSnapshot) {
-
+                adminAllChannelList.clear();
                 if (channelSnapshot.getChildrenCount() < 1) {
                     Toast.makeText(AdminChannelListActivity.this, "No Channel to Subscribe", Toast.LENGTH_LONG).show();
 

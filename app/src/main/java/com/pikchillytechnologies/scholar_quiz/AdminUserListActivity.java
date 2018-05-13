@@ -301,9 +301,8 @@ public class AdminUserListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                updateData();
-
                 Toast.makeText(AdminUserListActivity.this, moderatorName + " is now Moderator of channel " + channelName, Toast.LENGTH_SHORT).show();
+                updateData();
                 finish();
             }
         });
@@ -312,7 +311,7 @@ public class AdminUserListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                //finish();
+                dialog.dismiss();
             }
         });
 
