@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -12,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -25,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +51,11 @@ public class UserChannelActivity extends AppCompatActivity {
     private DatabaseReference mChannelListRef;
     private DatabaseReference mSubscriptionListRef;
     private DatabaseReference mUserRef;
+
+    StorageReference downloadImageStorageReference;
+    FirebaseStorage storage;
+    Bitmap bitmap;
+    ImageView imageView_UserPhoto;
 
     // Variables to store information of user
     String channelId;
@@ -82,12 +92,14 @@ public class UserChannelActivity extends AppCompatActivity {
 
         // To get User id of Current user so we can travel to Subscription List of User
         user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = String.valueOf(user.getUid());
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
         mSubscriptionListRef = mDatabase.child("SQ_Subscription/" + String.valueOf(user.getUid()));
-
         mChannelRef = mDatabase.child("SQ_ChannelList/");
+
+        storage = FirebaseStorage.getInstance();
+        downloadImageStorageReference = storage.getReferenceFromUrl("gs://scholarquiz-e4b55.appspot.com").child("images/").child(userId);
 
         mUserRef = mDatabase.child(user.getUid());
 
@@ -99,9 +111,11 @@ public class UserChannelActivity extends AppCompatActivity {
          * Code to Read All Channel List from Firebase and show them in Channel List Activity
          */
 
+
     //    final ProgressDialog progressDialog = new ProgressDialog(this);
      //   progressDialog.setTitle("Loading...");
       //  progressDialog.show();
+
 
         // Read all the channels name from Firebase
         mChannelRef.addValueEventListener(new ValueEventListener() {
@@ -327,7 +341,6 @@ public class UserChannelActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * Menu Functions
      * */
@@ -342,6 +355,25 @@ public class UserChannelActivity extends AppCompatActivity {
 
         TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
         txtUserName.setText(userName);
+
+        // Download User Image from Firebase and show it to User.
+        final long ONE_MEGABYTE = 1024 * 1024;
+        downloadImageStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageView_UserPhoto.setImageBitmap(bitmap);
+
+            }
+        });
+
+        imageView_UserPhoto = menuDialog.getWindow().findViewById(R.id.imageview_UserImage);
+
+        if(bitmap != null) {
+            imageView_UserPhoto.setImageBitmap(bitmap);
+        }else {
+            imageView_UserPhoto.setImageResource(R.drawable.userimage_default);
+        }
 
         menuDialog.show();
     }
@@ -378,6 +410,8 @@ public class UserChannelActivity extends AppCompatActivity {
         finish();
 
     }
+
+
 
     /**
      * 4. Function to execute when user presses MyChannel

@@ -25,8 +25,6 @@
         android:src="@drawable/title_bg_yellow"
         android:textAlignment="center" />
 
-
-
     <Button
         android:id="@+id/button_Menu"
         android:layout_width="50dp"
@@ -47,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="CHANNEL LIST"
+        android:text="All Channel's"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="25sp"

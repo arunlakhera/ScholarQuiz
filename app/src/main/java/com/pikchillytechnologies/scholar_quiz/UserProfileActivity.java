@@ -64,6 +64,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
+    Bitmap bitmap;
 
     ImageView imageView_UserPhoto;
     TextView textViewUserEmailId;
@@ -90,6 +91,13 @@ public class UserProfileActivity extends AppCompatActivity {
         mUserRef = mDatabase.child("SQ_Users/");
 
         imageView_UserPhoto = findViewById(R.id.imageview_UserProfileImage);
+
+        if(bitmap != null) {
+            imageView_UserPhoto.setImageBitmap(bitmap);
+        }else {
+            imageView_UserPhoto.setImageResource(R.drawable.userimage_default);
+        }
+
 
         mUserRef.child(userId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -154,7 +162,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     }
 
-
+    // Show Intent to user to Select Photo
     public void choosePhoto() {
 
         Intent intent = new Intent();
@@ -183,7 +191,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-
+    // Save Selected Image to Firebase
     private void uploadImage() {
 
         if(filePath != null)
@@ -232,8 +240,9 @@ public class UserProfileActivity extends AppCompatActivity {
         downloadImageStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 imageView_UserPhoto.setImageBitmap(bitmap);
+
             }
         });
 
@@ -260,14 +269,12 @@ public class UserProfileActivity extends AppCompatActivity {
 
         imageView_UserPhoto = menuDialog.getWindow().findViewById(R.id.imageview_UserImage);
 
-        final long ONE_MEGABYTE = 1024 * 1024;
-        downloadImageStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                imageView_UserPhoto.setImageBitmap(bitmap);
-            }
-        });
+        if(bitmap !=null) {
+            imageView_UserPhoto.setImageBitmap(bitmap);
+        }else {
+            imageView_UserPhoto.setImageResource(R.drawable.userimage_default);
+        }
+
 
         menuDialog.show();
     }

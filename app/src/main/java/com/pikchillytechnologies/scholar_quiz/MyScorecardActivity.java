@@ -3,6 +3,8 @@ package com.pikchillytechnologies.scholar_quiz;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -10,11 +12,16 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class MyScorecardActivity extends AppCompatActivity {
 
@@ -33,7 +40,15 @@ public class MyScorecardActivity extends AppCompatActivity {
     String userName;
     String userEmail;
 
+    StorageReference downloadImageStorageReference;
+    FirebaseStorage storage;
+    Bitmap bitmap;
+    ImageView imageView_UserPhoto;
+
     Dialog menuDialog;
+
+    FirebaseUser user;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +56,12 @@ public class MyScorecardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_scorecard);
 
         menuDialog = new Dialog(this);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = String.valueOf(user.getUid());
+
+        storage = FirebaseStorage.getInstance();
+        downloadImageStorageReference = storage.getReferenceFromUrl("gs://scholarquiz-e4b55.appspot.com").child("images/").child(userId);
 
         // Declare variable to get values passed from channelActivity
         Bundle quizScoreBundle = getIntent().getExtras();
@@ -87,7 +108,7 @@ public class MyScorecardActivity extends AppCompatActivity {
 
         // Set the Title of the Quiz
         TextView quizTitleTextView = findViewById(R.id.textView_QuizTitle);
-        quizTitleTextView.setText(quizTitle.toUpperCase() + " SCORE");
+        quizTitleTextView.setText(quizTitle + " Score");
 
         //Set Name of User
         TextView nameTextView = findViewById(R.id.name_TextView);
@@ -168,6 +189,26 @@ public class MyScorecardActivity extends AppCompatActivity {
 
         TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
         txtUserName.setText(userName);
+
+        // Download User Image from Firebase and show it to User.
+        final long ONE_MEGABYTE = 1024 * 1024;
+        downloadImageStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageView_UserPhoto.setImageBitmap(bitmap);
+
+            }
+        });
+
+        imageView_UserPhoto = menuDialog.getWindow().findViewById(R.id.imageview_UserImage);
+
+        if(bitmap != null) {
+            imageView_UserPhoto.setImageBitmap(bitmap);
+        }else {
+            imageView_UserPhoto.setImageResource(R.drawable.userimage_default);
+        }
+
 
         menuDialog.show();
     }

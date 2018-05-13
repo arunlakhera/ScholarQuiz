@@ -3,6 +3,8 @@ package com.pikchillytechnologies.scholar_quiz;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -15,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -22,6 +25,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -30,6 +34,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +51,7 @@ public class QuizActivity extends AppCompatActivity {
     String moderatorId;
     String quizListKey;
     String quizTitle;
+    String userId;
 
     // Flags to keep track of which answer button was selected
     boolean answer1Clicked = false;
@@ -96,6 +103,11 @@ public class QuizActivity extends AppCompatActivity {
     private DatabaseReference mUserRef;
     private FirebaseUser user;
 
+    StorageReference downloadImageStorageReference;
+    FirebaseStorage storage;
+    Bitmap bitmap;
+    ImageView imageView_UserPhoto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +143,11 @@ public class QuizActivity extends AppCompatActivity {
         // Get user information
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
+        userId = String.valueOf(user.getUid());
         mUserRef = mDatabase.child("SQ_Users").child(String.valueOf(user.getUid()));
+
+        storage = FirebaseStorage.getInstance();
+        downloadImageStorageReference = storage.getReferenceFromUrl("gs://scholarquiz-e4b55.appspot.com").child("images/").child(userId);
 
         mUserRef.child("Name").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -634,6 +650,27 @@ public class QuizActivity extends AppCompatActivity {
         menuDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView txtUserName = (TextView) menuDialog.getWindow().findViewById(R.id.textview_UserName);
         txtUserName.setText(userName);
+
+        // Download User Image from Firebase and show it to User.
+        final long ONE_MEGABYTE = 1024 * 1024;
+        downloadImageStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageView_UserPhoto.setImageBitmap(bitmap);
+
+            }
+        });
+
+        imageView_UserPhoto = menuDialog.getWindow().findViewById(R.id.imageview_UserImage);
+
+        if(bitmap != null) {
+            imageView_UserPhoto.setImageBitmap(bitmap);
+        }else {
+            imageView_UserPhoto.setImageResource(R.drawable.userimage_default);
+        }
+
+
         menuDialog.show();
     }
 

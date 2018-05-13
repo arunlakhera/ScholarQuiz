@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:text="QUIZ CHANNELS"
+            android:text="Quiz Channel's"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="25dp"

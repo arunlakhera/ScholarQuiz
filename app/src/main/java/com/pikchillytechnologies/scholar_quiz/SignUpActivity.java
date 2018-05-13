@@ -79,16 +79,28 @@ public class SignUpActivity extends AppCompatActivity {
                 if (isNetworkAvailable()){
 
                     // Declare variable to fetch values entered in email and password field
+
+                    EditText userName_EditText = findViewById(R.id.editText_Name);
                     EditText emailId_EditText = findViewById(R.id.editText_EmailId);
+                    EditText slackId_EditText = findViewById(R.id.editText_SlackId);
                     EditText password_EditText = findViewById(R.id.editText_Password);
                     EditText confirmPassword_EditText = findViewById(R.id.editText_ConfirmPassword);
 
                     // Store the value in variables after converting them to string
+                    String userInputName = String.valueOf(userName_EditText.getText());
                     String email = String.valueOf(emailId_EditText.getText());
+                    String userInputSlackId = String.valueOf(slackId_EditText.getText());
                     String password = String.valueOf(password_EditText.getText());
                     String confirmPassword = String.valueOf(confirmPassword_EditText.getText());
 
-                    if (email.isEmpty()) {
+                    if (userInputName.isEmpty()) {
+
+                        // Show message if User Name is not provided
+                        Toast.makeText(SignUpActivity.this, "User Name is required for Sign Up...", Toast.LENGTH_SHORT).show();
+
+                        // Set the focus to email id Field
+                        userName_EditText.requestFocus();
+                    }else if (email.isEmpty()) {
 
                         // Show message if email is not provided
                         Toast.makeText(SignUpActivity.this, "Email ID is required for Sign Up...", Toast.LENGTH_SHORT).show();
@@ -104,7 +116,14 @@ public class SignUpActivity extends AppCompatActivity {
                         // Set the focus to email id Field
                         emailId_EditText.requestFocus();
 
-                    }else if (password.isEmpty()) {
+                    }else if (userInputSlackId.isEmpty()) {
+
+                        // Show message if User Name is not provided
+                        Toast.makeText(SignUpActivity.this, "Slack ID is required for Sign Up...", Toast.LENGTH_SHORT).show();
+
+                        // Set the focus to email id Field
+                        slackId_EditText.requestFocus();
+                    } else if (password.isEmpty()) {
 
                         // Show message if password is not provided
                         Toast.makeText(SignUpActivity.this, "Please enter a Password...", Toast.LENGTH_SHORT).show();

@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="USERS"
+        android:text="Users"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="25sp"
